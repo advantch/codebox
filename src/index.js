@@ -14,7 +14,7 @@ const { DEFAULT_THEMES, COMMON_LANGUAGES } = require('./constants');
 //#endregion
 
 class CodeBox {
-  constructor({ data, api, config }){
+  constructor({ data, api, config,readOnly }){
     this.api = api;
     this.config = {
       themeName: config.themeName && typeof config.themeName === 'string' ? config.themeName : '',
@@ -27,6 +27,7 @@ class CodeBox {
       language: data.language && typeof data.language === 'string' ? data.language : 'Auto-detect',
       theme: data.theme && typeof data.theme === 'string' ? data.theme : this._getThemeURLFromConfig(),
     };
+    this.readonly = readOnly;
     this.highlightScriptID = 'highlightJSScriptElement';
     this.highlightCSSID = 'highlightJSCSSElement';
     this.codeArea = document.createElement('div');
@@ -37,6 +38,15 @@ class CodeBox {
     this._injectHighlightJSCSSElement();
 
     this.api.listeners.on(window, 'click', this._closeAllLanguageSelects, true);
+  }
+
+      /**
+   * Notify core that read-only mode is supported
+   *
+   * @returns {boolean}
+   */
+  static get isReadOnlySupported() {
+        return true;
   }
 
   static get sanitize(){
@@ -68,7 +78,7 @@ class CodeBox {
 
     codeAreaHolder.setAttribute('class', 'codeBoxHolder');
     this.codeArea.setAttribute('class', `codeBoxTextArea ${ this.config.useDefaultTheme } ${ this.data.language }`);
-    this.codeArea.setAttribute('contenteditable', true);
+    this.codeArea.setAttribute('contenteditable', this.readonly);
     this.codeArea.innerHTML = this.data.code;
     this.api.listeners.on(this.codeArea, 'blur', event => this._highlightCodeArea(event), false);
     this.api.listeners.on(this.codeArea, 'paste', event => this._handleCodeAreaPaste(event), false);
