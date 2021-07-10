@@ -78,13 +78,14 @@ class CodeBox {
 
     codeAreaHolder.setAttribute('class', 'codeBoxHolder');
     this.codeArea.setAttribute('class', `codeBoxTextArea ${ this.config.useDefaultTheme } ${ this.data.language }`);
-    this.codeArea.setAttribute('contenteditable', this.readonly);
+    this.codeArea.setAttribute('contenteditable', !this.readonly);
     this.codeArea.innerHTML = this.data.code;
     this.api.listeners.on(this.codeArea, 'blur', event => this._highlightCodeArea(event), false);
     this.api.listeners.on(this.codeArea, 'paste', event => this._handleCodeAreaPaste(event), false);
-
-    codeAreaHolder.appendChild(this.codeArea);
+    
+    //Append language select on top of the editor
     codeAreaHolder.appendChild(languageSelect);
+    codeAreaHolder.appendChild(this.codeArea);
 
     return codeAreaHolder;
   }
@@ -112,8 +113,10 @@ class CodeBox {
 
     selectHolder.setAttribute('class', 'codeBoxSelectDiv');
 
-    this.selectDropIcon.setAttribute('class', `codeBoxSelectDropIcon ${ this.config.useDefaultTheme }`);
-    this.selectDropIcon.innerHTML = '&#8595;';
+    if(!this.readonly){
+      this.selectDropIcon.setAttribute('class', `codeBoxSelectDropIcon ${ this.config.useDefaultTheme }`);
+      this.selectDropIcon.innerHTML = '&#8595;';
+    }
     this.selectInput.setAttribute('class', `codeBoxSelectInput ${ this.config.useDefaultTheme }`);
     this.selectInput.setAttribute('type', 'text');
     this.selectInput.setAttribute('readonly', true);
