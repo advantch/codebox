@@ -117,7 +117,8 @@ class CodeBox {
       this.selectDropIcon.setAttribute('class', `codeBoxSelectDropIcon ${ this.config.useDefaultTheme }`);
       this.selectDropIcon.innerHTML = '&#8595;';
     }
-    this.selectInput.setAttribute('class', `codeBoxSelectInput ${ this.config.useDefaultTheme }`);
+    const readonlyCssClass = this.readonly ? "readonly" : "";
+    this.selectInput.setAttribute('class', `codeBoxSelectInput ${this.readonlyCssClass}  ${ this.config.useDefaultTheme }`);
     this.selectInput.setAttribute('type', 'text');
     this.selectInput.setAttribute('readonly', true);
     this.selectInput.value = this.data.language;
